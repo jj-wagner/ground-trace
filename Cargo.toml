@@ -1,0 +1,12 @@
+[workspace]
+members = [
+    "backend"
+]
+
+resolver = "2"
+
+[workspace.package]
+edition = "2024"
+authors = ["JJ Wagner jjwagner.dev@gmail.com"]
+license = "MIT"
+
