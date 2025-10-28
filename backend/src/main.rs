@@ -1,16 +1,28 @@
 use axum::{routing::get, Router};
 use tokio::net::TcpListener;
 
+mod db;
+
 async fn healthz() -> &'static str {
     "ok"
 }
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    // Load .env file
     dotenvy::dotenv().ok();
 
     // Simple logging
     tracing_subscriber::fmt::init();
+
+    // Connect to database
+    tracing::info!("connecting to database...");
+    let pool = db::connect_from_env().await?;
+
+    // Run migrations
+    tracing::info!("running migrations...");
+    db::run_migrations(&pool).await?;
+    tracing::info!("migrations complete!");
 
     // Build the app
     let app = Router::new()
